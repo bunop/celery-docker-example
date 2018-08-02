@@ -81,6 +81,9 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
+# celery pid
+celerybeat.pid
+
 # SageMath parsed files
 *.sage.py
 
@@ -106,5 +109,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Mac stuff 
+# Mac stuff
 .DS_Store

@@ -2,11 +2,15 @@ version: '3'
 
 services:
   db:
-    image: postgres:9.6.5
+    image: postgres:9.6
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      # all scripts and sql file inside this directory will be executed after database initialization
+      - "./db/:/docker-entrypoint-initdb.d/"
+
   redis:
     image: "redis:alpine"
+
   web:
     build: .
     command: python /code/manage.py migrate --noinput
@@ -18,6 +22,7 @@ services:
     depends_on:
       - db
       - redis
+
   celery:
     build: .
     command: celery -A proj worker -l info
@@ -26,6 +31,7 @@ services:
     depends_on:
       - db
       - redis
+
   celery-beat:
     build: .
     command: celery -A proj beat -l info
@@ -34,8 +40,6 @@ services:
     depends_on:
       - db
       - redis
-
-
 
 volumes:
   postgres_data:
