@@ -138,3 +138,5 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab()  # execute every minute
     }
 }
+# cleanup after 1 hour
+CELERY_TASK_RESULT_EXPIRES = 3600
