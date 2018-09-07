@@ -1,6 +1,7 @@
 from celery import shared_task
 from proj import celery_app
 from celery.utils.log import get_task_logger
+from django.core import management
 
 logger = get_task_logger(__name__)
 
@@ -29,3 +30,17 @@ def mul(self, x, y):
 @celery_app.task(bind=True)
 def xsum(self, numbers):
     return sum(numbers)
+
+
+# https://stackoverflow.com/a/51429597
+@celery_app.task
+def cleanup():
+    """Cleanup expired sessions by using Django management command."""
+    try:
+        logger.info("Clearing session with celery")
+        management.call_command("clearsessions", verbosity=1)
+        # PUT MANAGEMENT COMMAND HERE
+        return "success"
+
+    except Exception as e:
+        print(e)

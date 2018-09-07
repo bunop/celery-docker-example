@@ -31,14 +31,17 @@ services:
       - .:/code
     depends_on:
       - redis
+      - db
 
   celery-beat:
     build: .
-    command: celery -A proj beat -l info
+    # https://docs.docker.com/compose/startup-order/
+    command: ./wait-for-it.sh db:5432 -- celery -A proj beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - .:/code
     depends_on:
       - redis
+      - db
 
   celery-flower:
     build: .
@@ -49,6 +52,7 @@ services:
       - "5555:5555"
     depends_on:
       - redis
+      - db
 
 volumes:
   postgres_data:
