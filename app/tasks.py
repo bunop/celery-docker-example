@@ -1,4 +1,8 @@
-from celery import shared_task
+
+from numpy import random
+from scipy.fftpack import fft
+
+from celery import shared_task, current_task
 from proj import celery_app
 from celery.utils.log import get_task_logger
 from django.core import management
@@ -10,6 +14,7 @@ logger = get_task_logger(__name__)
 # app instance. Ignore results doesn't write results into database
 @shared_task(ignore_result=True)
 def hello():
+    logger.info("Logging hello")
     print("Hello there!")
 
 
@@ -44,3 +49,17 @@ def cleanup():
 
     except Exception as e:
         print(e)
+
+
+# https://www.codementor.io/uditagarwal/asynchronous-tasks-using-celery-with-django-du1087f5k
+@shared_task
+def fft_random(n):
+    for i in range(n):
+        x = random.normal(0, 0.1, 2000)
+        y = fft(x)
+        if (i % 30 == 0):
+            process_percent = int(100 * float(i) / float(n))
+            current_task.update_state(
+                state='PROGRESS',
+                meta={'process_percent': process_percent})
+    return random.random()
