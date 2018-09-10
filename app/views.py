@@ -5,6 +5,8 @@ from django.http import HttpResponse
 
 from celery.result import AsyncResult
 
+from .tasks import fft_random
+
 
 # Create your views here.
 def task_state(request):
@@ -21,3 +23,12 @@ def task_state(request):
 
     json_data = json.dumps(data)
     return HttpResponse(json_data, content_type='application/json')
+
+
+def progress_view(request):
+    result = fft_random.delay(10000)
+
+    return render(
+        request,
+        'app/display_progress.html',
+        context={'task_id': result.task_id})

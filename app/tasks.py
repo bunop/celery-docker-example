@@ -7,6 +7,8 @@ from proj import celery_app
 from celery.utils.log import get_task_logger
 from django.core import management
 
+from celery_progress.backend import ProgressRecorder
+
 logger = get_task_logger(__name__)
 
 
@@ -52,14 +54,14 @@ def cleanup():
 
 
 # https://www.codementor.io/uditagarwal/asynchronous-tasks-using-celery-with-django-du1087f5k
-@shared_task
-def fft_random(n):
+@shared_task(bind=True)
+def fft_random(self, n):
+    progress_recorder = ProgressRecorder(self)
+
     for i in range(n):
         x = random.normal(0, 0.1, 2000)
         y = fft(x)
-        if (i % 30 == 0):
-            process_percent = int(100 * float(i) / float(n))
-            current_task.update_state(
-                state='PROGRESS',
-                meta={'process_percent': process_percent})
-    return random.random()
+
+        progress_recorder.set_progress(i + 1, n)
+
+    return "done"
