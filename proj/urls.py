@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from app.views import progress_view
+from app.views import progress_view, index
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^celery-progress/', include('celery_progress.urls')),
-    url(r'', progress_view, name='home')
+    url(r'^$', index, name='home'),
+    url(r'task/', progress_view, name='task')
 ]

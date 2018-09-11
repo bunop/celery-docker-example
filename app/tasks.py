@@ -2,10 +2,9 @@
 from numpy import random
 from scipy.fftpack import fft
 
-from celery import shared_task, current_task
+from celery import shared_task
 from proj import celery_app
 from celery.utils.log import get_task_logger
-from django.core import management
 
 from celery_progress.backend import ProgressRecorder
 

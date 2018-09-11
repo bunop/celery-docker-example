@@ -1,16 +1,14 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-
+{% block title %}Task{% endblock title %}
 
 {% block content%}
-  <div class="container mt-4">
-    <a href="{% url 'celery_progress:task_status' task_id %}"><h1>{{ task_id }}</h1></a>
-    <div class='progress-wrapper'>
-      <div id='progress-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
-    </div>
-    <div id="progress-bar-message">Waiting for progress to start...</div>
+  <a href="{% url 'celery_progress:task_status' task_id %}"><h1>{{ task_id }}</h1></a>
+  <div class='progress-wrapper'>
+    <div id='progress-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
   </div>
+  <div id="progress-bar-message">Waiting for progress to start...</div>
 {% endblock content %}
 
 {% block custom-js %}

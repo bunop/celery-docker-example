@@ -25,6 +25,13 @@ def task_state(request):
     return HttpResponse(json_data, content_type='application/json')
 
 
+def index(request):
+    return render(
+        request,
+        'app/index.html',
+        )
+
+
 def progress_view(request):
     result = fft_random.delay(10000)
 

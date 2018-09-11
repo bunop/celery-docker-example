@@ -45,6 +45,11 @@ def setup_periodic_tasks(sender, **kwargs):
         cleanup.s(),
     )
 
+    sender.add_periodic_task(
+        crontab(minute="*/5"),
+        fail.s(),
+    )
+
 
 # task inheritance
 @app.task(bind=True, base=MyTask)
@@ -64,3 +69,8 @@ def cleanup(self):
     # PUT MANAGEMENT COMMAND HERE
 
     return "success"
+
+
+@app.task(bind=True, base=MyTask)
+def fail(self):
+    raise Exception("Testing an exception")
