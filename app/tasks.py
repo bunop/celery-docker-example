@@ -39,20 +39,6 @@ def xsum(self, numbers):
     return sum(numbers)
 
 
-# https://stackoverflow.com/a/51429597
-@celery_app.task
-def cleanup():
-    """Cleanup expired sessions by using Django management command."""
-    try:
-        logger.info("Clearing session with celery")
-        management.call_command("clearsessions", verbosity=1)
-        # PUT MANAGEMENT COMMAND HERE
-        return "success"
-
-    except Exception as e:
-        print(e)
-
-
 # https://www.codementor.io/uditagarwal/asynchronous-tasks-using-celery-with-django-du1087f5k
 @shared_task(bind=True)
 def fft_random(self, n):

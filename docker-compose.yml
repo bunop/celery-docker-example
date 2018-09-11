@@ -26,7 +26,7 @@ services:
 
   celery:
     build: .
-    command: celery -A proj worker -l info
+    command: celery -A proj worker -l info -E --pidfile /var/run/celery.pid
     volumes:
       - .:/code
     depends_on:
@@ -36,7 +36,7 @@ services:
   celery-beat:
     build: .
     # https://docs.docker.com/compose/startup-order/
-    command: ./wait-for-it.sh db:5432 -- celery -A proj beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: ./wait-for-it.sh db:5432 -- celery -A proj beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /var/run/celerybeat.pid
     volumes:
       - .:/code
     depends_on:
